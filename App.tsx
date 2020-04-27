@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { RealtimeDemo as Realtime } from './src/realtime_demo';
+import { RealtimeDemo as Realtime } from './src/RealtimeDemo';
 export default function App() {
   return (
     <View>
