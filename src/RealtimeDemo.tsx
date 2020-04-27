@@ -8,7 +8,6 @@ import { Camera } from 'expo-camera';
 import { ExpoWebGLRenderingContext } from 'expo-gl';
 
 import * as tf from '@tensorflow/tfjs';
-import * as blazeface from '@tensorflow-models/blazeface';
 import * as posenet from '@tensorflow-models/posenet';
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
 
@@ -24,9 +23,6 @@ interface ScreenState {
   isLoading: boolean;
   posenetModel?: posenet.PoseNet;
   pose?: posenet.Pose;
-  faceDetector?: any;
-  faces?: blazeface.NormalizedFace[];
-  modelName: string;
 }
 
 const inputTensorWidth = 152;
@@ -43,8 +39,7 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
     super(props);
     this.state = {
       isLoading: true,
-      cameraType: Camera.Constants.Type.front,
-      modelName: 'posenet'
+      cameraType: Camera.Constants.Type.front
     };
     this.handleImageTensorReady = this.handleImageTensorReady.bind(this);
   }
@@ -60,45 +55,25 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
     return model;
   }
 
-  async loadBlazefaceModel() {
-    const model = await blazeface.load();
-    return model;
-  }
-
   async handleImageTensorReady(
     images: IterableIterator<tf.Tensor3D>,
     updatePreview: () => void,
     gl: ExpoWebGLRenderingContext
   ) {
     const loop = async () => {
-      const { modelName } = this.state;
       if (!AUTORENDER) {
         updatePreview();
       }
 
-      if (modelName === 'posenet') {
-        if (this.state.posenetModel != null) {
-          const imageTensor = images.next().value;
-          const flipHorizontal = Platform.OS === 'ios' ? false : true;
-          const pose = await this.state.posenetModel.estimateSinglePose(
-            imageTensor,
-            { flipHorizontal }
-          );
-          this.setState({ pose });
-          tf.dispose([imageTensor]);
-        }
-      } else {
-        if (this.state.faceDetector != null) {
-          const imageTensor = images.next().value;
-          const returnTensors = false;
-          const faces = await this.state.faceDetector.estimateFaces(
-            imageTensor,
-            returnTensors
-          );
-
-          this.setState({ faces });
-          tf.dispose(imageTensor);
-        }
+      if (this.state.posenetModel != null) {
+        const imageTensor = images.next().value;
+        const flipHorizontal = Platform.OS === 'ios' ? false : true;
+        const pose = await this.state.posenetModel.estimateSinglePose(
+          imageTensor,
+          { flipHorizontal }
+        );
+        this.setState({ pose });
+        tf.dispose([imageTensor]);
       }
 
       if (!AUTORENDER) {
@@ -121,14 +96,11 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
     console.log(status);
     await tf.ready();
     console.log('TF.READY wooorks');
-    const [blazefaceModel, posenetModel] = await Promise.all([
-      this.loadBlazefaceModel(),
-      this.loadPosenetModel()
-    ]);
+    const posenetModel = await this.loadPosenetModel();
+
     this.setState({
       hasCameraPermission: status === 'granted',
       isLoading: false,
-      faceDetector: blazefaceModel,
       posenetModel
     });
   }
@@ -185,58 +157,8 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
     }
   }
 
-  renderFaces() {
-    const { faces } = this.state;
-    if (faces != null) {
-      const faceBoxes = faces.map((f, fIndex) => {
-        const topLeft = f.topLeft as number[];
-        const bottomRight = f.bottomRight as number[];
-
-        const landmarks = (f.landmarks as number[][]).map((l, lIndex) => {
-          return (
-            <Circle
-              key={`landmark_${fIndex}_${lIndex}`}
-              cx={l[0]}
-              cy={l[1]}
-              r='2'
-              strokeWidth='0'
-              fill='blue'
-            />
-          );
-        });
-
-        return (
-          <G key={`facebox_${fIndex}`}>
-            <Rect
-              x={topLeft[0]}
-              y={topLeft[1]}
-              fill={'red'}
-              fillOpacity={0.2}
-              width={bottomRight[0] - topLeft[0]}
-              height={bottomRight[1] - topLeft[1]}
-            />
-            {landmarks}
-          </G>
-        );
-      });
-
-      const flipHorizontal = Platform.OS === 'ios' ? 1 : -1;
-      return (
-        <Svg
-          height='100%'
-          width='100%'
-          viewBox={`0 0 ${inputTensorWidth} ${inputTensorHeight}`}
-          scaleX={flipHorizontal}>
-          {faceBoxes}
-        </Svg>
-      );
-    } else {
-      return null;
-    }
-  }
-
   render() {
-    const { isLoading, modelName } = this.state;
+    const { isLoading } = this.state;
 
     // TODO File issue to be able get this from expo.
     // Caller will still need to account for orientation/phone rotation changes
@@ -269,9 +191,7 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
           onReady={this.handleImageTensorReady}
           autorender={AUTORENDER}
         />
-        <View style={styles.modelResults}>
-          {modelName === 'posenet' ? this.renderPose() : this.renderFaces()}
-        </View>
+        <View style={styles.modelResults}>{this.renderPose()}</View>
       </View>
     );
 
