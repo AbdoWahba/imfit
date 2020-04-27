@@ -20,12 +20,10 @@ interface ScreenProps {
 
 interface ScreenState {
   hasCameraPermission?: boolean;
-  // tslint:disable-next-line: no-any
   cameraType: any;
   isLoading: boolean;
   posenetModel?: posenet.PoseNet;
   pose?: posenet.Pose;
-  // tslint:disable-next-line: no-any
   faceDetector?: any;
   faces?: blazeface.NormalizedFace[];
   modelName: string;
@@ -36,7 +34,6 @@ const inputTensorHeight = 200;
 
 const AUTORENDER = true;
 
-// tslint:disable-next-line: variable-name
 const TensorCamera = cameraWithTensors(Camera);
 
 export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
@@ -59,16 +56,12 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
   //   quantBytes: 2
   // }
   async loadPosenetModel() {
-    console.log('HI, posenet');
     const model = await posenet.load();
-    console.log('Bye, posenet');
     return model;
   }
 
   async loadBlazefaceModel() {
-    console.log('HI, plaze');
     const model = await blazeface.load();
-    console.log('bye,plaze');
     return model;
   }
 
@@ -132,8 +125,6 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
       this.loadBlazefaceModel(),
       this.loadPosenetModel()
     ]);
-    console.log('blazefaceModel');
-    console.log('posenetModel');
     this.setState({
       hasCameraPermission: status === 'granted',
       isLoading: false,
