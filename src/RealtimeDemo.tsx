@@ -12,6 +12,7 @@ import * as posenet from '@tensorflow-models/posenet';
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
 
 import { styles } from './styles';
+import { pose_ready } from './pose-ready';
 
 interface ScreenProps {
   returnToMain: () => void;
@@ -73,6 +74,7 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
           { flipHorizontal }
         );
         this.setState({ pose });
+        pose_ready(pose)
         tf.dispose([imageTensor]);
       }
 
@@ -157,6 +159,12 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
     }
   }
 
+  flipCam(){
+    this.setState({
+      cameraType: this.state.cameraType === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back
+    })
+  }
+
   render() {
     const { isLoading } = this.state;
 
@@ -177,6 +185,11 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
 
     const camView = (
       <View style={styles.cameraContainer}>
+        <View style={styles.sectionContainer}>
+          <Button onPress={this.props.returnToMain} title='Back' />
+          <Button onPress={ () => this.flipCam()} title='Flip' />
+        </View>
+
         <TensorCamera
           // Standard Camera props
           style={styles.camera}
@@ -196,10 +209,7 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
     );
 
     return (
-      <View style={{ width: '100%' }}>
-        <View style={styles.sectionContainer}>
-          <Button onPress={this.props.returnToMain} title='Back' />
-        </View>
+      <View style={styles.realTimeContainer}>
         {isLoading ? (
           <View style={[styles.loadingIndicator]}>
             <ActivityIndicator size='large' color='#FF0266' />
@@ -207,6 +217,7 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
         ) : (
           camView
         )}
+
       </View>
     );
   }

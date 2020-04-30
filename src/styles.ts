@@ -1,6 +1,13 @@
 import { StyleSheet } from 'react-native';
+import { Dimensions } from "react-native";
 
 export const styles = StyleSheet.create({
+  appContainer:{
+    flex: 1,
+  },
+  realTimeContainer:{
+    paddingTop: 32
+  },
   loadingIndicator: {
     position: 'absolute',
     top: 20,
@@ -8,8 +15,11 @@ export const styles = StyleSheet.create({
     zIndex: 200
   },
   sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24
+    position: 'absolute',
+    bottom: 15,
+    right: 15,
+    zIndex: 40,
+    flexDirection: 'row',
   },
   cameraContainer: {
     display: 'flex',
@@ -18,14 +28,16 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '100%',
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   camera: {
     position: 'absolute',
-    left: 50,
-    top: 100,
-    width: 600 / 2,
-    height: 800 / 2,
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    width: Dimensions.get('window').width,
+    height: ((Dimensions.get('window').width * 4)/3),
     zIndex: 1,
     borderWidth: 1,
     borderColor: 'black',
@@ -33,10 +45,12 @@ export const styles = StyleSheet.create({
   },
   modelResults: {
     position: 'absolute',
-    left: 50,
-    top: 100,
-    width: 600 / 2,
-    height: 800 / 2,
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    width: Dimensions.get('window').width,
+    height: ((Dimensions.get('window').width * 4)/3),
     zIndex: 20,
     borderWidth: 1,
     borderColor: 'black',
