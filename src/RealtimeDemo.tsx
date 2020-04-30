@@ -26,8 +26,8 @@ interface ScreenState {
   pose?: posenet.Pose;
 }
 
-const inputTensorWidth = 152;
-const inputTensorHeight = 200;
+const inputTensorWidth = 180;
+const inputTensorHeight =180;
 
 const AUTORENDER = true;
 
@@ -52,7 +52,13 @@ export class RealtimeDemo extends React.Component<ScreenProps, ScreenState> {
   //   quantBytes: 2
   // }
   async loadPosenetModel() {
-    const model = await posenet.load();
+    const model = await posenet.load({
+      architecture: 'MobileNetV1',
+      outputStride: 16,
+      inputResolution: { width:inputTensorWidth , height: inputTensorHeight },
+      multiplier: 0.50,
+      quantBytes: 4
+    });
     return model;
   }
 
