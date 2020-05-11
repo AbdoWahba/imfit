@@ -16,15 +16,7 @@ class Thread(QThread):
     def run(self):
         cap = cv2.VideoCapture(0)
         fgbg = cv2.createBackgroundSubtractorMOG2()
-        x=[]
-        y=[]
-        xall=[]
-        xall2=[]
-        yall=[]
-        counter=0
-        testnet=[]
-        t=0
-        lasttime=0
+        
         while True:
             if(globals.recording):
                 ret, frame = cap.read()
@@ -38,36 +30,48 @@ class Thread(QThread):
                     fgmask = fgbg.apply(frame)
                     # font = cv2.FONT_HERSHEY_SIMPLEX
                     # cv2.putText(fgmask,str(counter),(0,130), font, 5, (255, 0, 0), 4, cv2.LINE_AA)
-                    x.append(t)
+                    t= globals.t
+                    globals.x.append(t)
                     t=t+1
                     point=np.average(np.where(fgmask==255), axis=1)
-                    y.append(point)
-                    xall.append(point[0])
-                    yall.append(point[1])
+                    globals.y.append(point)
+                    globals.xall.append(point[0])
+                    globals.yall.append(point[1])
                     if(not np.isnan(point[0])):
-                        meanx= 0 if (len(xall)<=0)  else np.nanmean(xall)
-                        meany= 0 if (len(yall)<=0) else np.nanmean(yall)
-                        xall2=xall.copy()+meany-meanx 
+                        meanx= 0 if (len(globals.xall)<=0)  else np.nanmean(globals.xall)
+                        meany= 0 if (len(globals.yall)<=0) else np.nanmean(globals.yall)
+                        globals.xall2=globals.xall.copy()+meany-meanx 
                         #print(min(yall))
-                        net=xall2+yall
-                        mean= 0 if (len(yall)<=1) else np.nanmean(net)
+                        net=globals.xall2+globals.yall
+                        mean= 0 if (len(globals.yall)<=1) else np.nanmean(net)
                         if(point[0]+meany-meanx+point[1] >= mean):
-                            if(len(testnet)>0 and testnet[-1]==0):
+                            if(len(globals.testnet)>0 and globals.testnet[-1]==0):
                                 #print (x[-1]-lasttime)
-                                if(lasttime==0):
-                                    counter=counter+1
-                                    lasttime=x[-1]
-                                elif(x[-1]-lasttime >= 20):# 20/30 if in live mode 100 if video
-                                    counter=counter+1
-                                    lasttime=x[-1]
+                                if(globals.lasttime==0):
+                                    if(globals.inpushup):
+                                        globals.pushupsCount=globals.pushupsCount+1
+                                        globals.lasttime=globals.x[-1]
+                                    elif(globals.insquats):
+                                        globals.squatscount=globals.squatscount+1
+                                        globals.lasttime=globals.x[-1]
+                                elif(globals.x[-1]-globals.lasttime >= 20):# 20/30 if in live mode 100 if video
+                                    if(globals.inpushup):
+                                        globals.pushupsCount=globals.pushupsCount+1
+                                        globals.lasttime=globals.x[-1]
+                                    elif(globals.insquats):
+                                        globals.squatscount=globals.squatscount+1
+                                        globals.lasttime=globals.x[-1]
                                     #print(counter)
                                 #print('--------------')
-                            testnet.append(1)
+                            globals.testnet.append(1)
                         else:
-                            testnet.append(0)
+                            globals.testnet.append(0)
                 #---------------------------
                 font = cv2.FONT_HERSHEY_SIMPLEX
-                cv2.putText(frame,str(counter),(0,130), font, 5, (255, 0, 0), 4, cv2.LINE_AA)
+                if(globals.inpushup):
+                    cv2.putText(frame,str(globals.pushupsCount),(0,130), font, 5, (255, 0, 0), 4, cv2.LINE_AA)
+                if(globals.insquats):
+                    cv2.putText(frame,str(globals.squatscount),(0,130), font, 5, (255, 0, 0), 4, cv2.LINE_AA)
                 rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 h, w, ch = rgbImage.shape
                 bytesPerLine = ch * w

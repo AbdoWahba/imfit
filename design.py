@@ -12,6 +12,16 @@ class PageWindow(QtWidgets.QMainWindow):
 
     def goto(self, name):
         self.gotoSignal.emit(name)
+    def reset(self):
+        globals.x=[]
+        globals.y=[]
+        globals.xall=[]
+        globals.xall2=[]
+        globals.yall=[]
+        globals.testnet=[]
+        globals.t=0
+        globals.lasttime=0
+        
 
 class MainWindow(PageWindow):
     def __init__(self):
@@ -33,17 +43,150 @@ class MainWindow(PageWindow):
 
 
     def UiComponents(self):
-        self.pushupcount = QtWidgets.QPushButton('start Push-Ups',self)
-        self.pushupcount.move(550,150)
-        self.pushupcount.resize(150,60)
-        self.pushupcount.clicked.connect(self.make_handleButton("pushupCount"))
+        self.pushupcountb = QtWidgets.QPushButton('start Push-Ups',self)
+        self.pushupcountb.move(550,150)
+        self.pushupcountb.resize(150,60)
+        self.pushupcountb.setFixedHeight(60)
+        self.pushupcountb.setStyleSheet("""QPushButton{
+            background-color: darkBlue;
+            border-style: outset;
+            border-width: 1px;
+            border-radius: 10px;
+            border-color: beige;
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            color: white
+            }""")
+        self.pushupcountb.clicked.connect(self.make_handleButton("pushupCount"))
+
+        self.squatscountb = QtWidgets.QPushButton('start Squats',self)
+        self.squatscountb.move(550,230)
+        self.squatscountb.resize(150,60)
+        self.squatscountb.setFixedHeight(60)
+        self.squatscountb.setStyleSheet("""QPushButton{
+            background-color: darkBlue;
+            border-style: outset;
+            border-width: 1px;
+            border-radius: 10px;
+            border-color: beige;
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            color: white
+            }""")
+        self.squatscountb.clicked.connect(self.make_handleButton("squatsCount"))
         
+        self.testb = QtWidgets.QPushButton('test Pose',self)
+        self.testb.move(550,310)
+        self.testb.resize(150,60)
+        self.testb.setFixedHeight(60)
+        self.testb.setStyleSheet("""QPushButton{
+            background-color: darkBlue;
+            border-style: outset;
+            border-width: 1px;
+            border-radius: 10px;
+            border-color: beige;
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            color: white
+            }""")
+
+        self.empty= QtWidgets.QLabel(self)
+        self.empty.setText(' ')
+
+        self.pushupcount_label = QtWidgets.QLabel(self)
+        self.pushupcount_label.setText('Push-up count')
+        self.pushupcount_label.setStyleSheet("""QLabel{
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            }""")
+        
+        self.pu_label = QtWidgets.QLabel(self)
+        self.pu_label.setText(str(globals.pushupsCount))
+        self.pu_label.setStyleSheet("""QLabel{
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            }""")
+
+        self.squatscount_label = QtWidgets.QLabel(self)
+        self.squatscount_label.setText('squats count')
+        self.squatscount_label.setStyleSheet("""QLabel{
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            }""")
+
+        self.sq_label = QtWidgets.QLabel(self)
+        self.sq_label.setText(str(globals.squatscount))
+        self.sq_label.setStyleSheet("""QLabel{
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            }""")
+
+        self.posetest = QtWidgets.QLabel(self)
+        self.posetest.setText('pose state')
+        self.posetest.setStyleSheet("""QLabel{
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            }""")
+
+        self.posetest_answer = QtWidgets.QLabel(self)
+        self.posetest_answer.setText('correct')
+        self.posetest_answer.setStyleSheet("""QLabel{
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            }""")
+
+        self.horizontalGroupBox = QtWidgets.QGroupBox(" ")
+        layout = QtWidgets.QGridLayout()
+        # layout.setColumnStretch(0, 3)
+        layout.setRowStretch(2,4)
+        layout.setRowStretch(2, 6)
+        layout.setVerticalSpacing(10)
+        
+        layout.addWidget(self.pushupcount_label,0,1)
+        layout.addWidget(self.pu_label,0,2)
+        layout.addWidget(self.pushupcountb,0,3)
+        layout.addWidget(self.squatscount_label,1,1)
+        layout.addWidget(self.sq_label,1,2)
+        layout.addWidget(self.squatscountb,1,3)
+        layout.addWidget(self.posetest,2,1)
+        layout.addWidget(self.posetest_answer,2,2)
+        layout.addWidget(self.testb,2,3)
+
+        layout.addWidget(self.empty,0,0)
+        layout.addWidget(self.empty,1,0)
+        layout.addWidget(self.empty,2,0)
+
+        layout.addWidget(self.empty,0,4)
+        layout.addWidget(self.empty,1,4)
+        layout.addWidget(self.empty,2,4)
+
+        self.setCentralWidget(self.horizontalGroupBox)
+        self.horizontalGroupBox.setLayout(layout)
 
 
     def make_handleButton(self, button):
         def handleButton():
             if button == "pushupCount":
+                self.reset()
+                globals.pushupCount=0
                 globals.recording=True
+                globals.inpushup=True
+                
+                self.goto("count")
+            if button == "squatsCount":
+                self.reset()
+                globals.squatsCount=0
+                globals.recording=True
+                globals.insquats=True
                 self.goto("count")
         return handleButton
 
