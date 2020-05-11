@@ -9,9 +9,11 @@ import globals
 
 class PageWindow(QtWidgets.QMainWindow):
     gotoSignal = QtCore.pyqtSignal(str)
+    updatesignal=QtCore.pyqtSignal(str)
 
     def goto(self, name):
         self.gotoSignal.emit(name)
+        self.updatesignal.emit(name)
     def reset(self):
         globals.x=[]
         globals.y=[]
@@ -24,14 +26,22 @@ class PageWindow(QtWidgets.QMainWindow):
         
 
 class MainWindow(PageWindow):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        #print("in main")
+        self.update()
         self.title = "main"
         self.left = 150
         self.top = 50
         self.width = 150
         self.height = 150
-        self.initUI()
+        self.initUI()   
+    
+
+    def updatelabels(self):
+        self.pu_label.setText(f"{globals.pushupsCount}")
+        self.sq_label.setText(f"{globals.squatscount}")
+
 
     def initUI(self):
         self.UiComponents()
@@ -105,7 +115,7 @@ class MainWindow(PageWindow):
             }""")
         
         self.pu_label = QtWidgets.QLabel(self)
-        self.pu_label.setText(str(globals.pushupsCount))
+        self.pu_label.setText(f'{globals.pushupsCount}')
         self.pu_label.setStyleSheet("""QLabel{
             font: bold 14px;
             min-width: 10em;
@@ -177,14 +187,14 @@ class MainWindow(PageWindow):
         def handleButton():
             if button == "pushupCount":
                 self.reset()
-                globals.pushupCount=0
+                globals.pushupsCount=0
                 globals.recording=True
                 globals.inpushup=True
                 
                 self.goto("count")
             if button == "squatsCount":
                 self.reset()
-                globals.squatsCount=0
+                globals.squatscount=0
                 globals.recording=True
                 globals.insquats=True
                 self.goto("count")
@@ -212,10 +222,47 @@ class countWindow(PageWindow):
         self.label = QLabel(self)
         self.label.move(80, 80)
         self.label.resize(640, 480)
-        th = Thread(self)
-        th.changePixmap.connect(self.setImage)
-        th.start()
+        
+        self.backb= QtWidgets.QPushButton('back',self)
+        self.backb.move(570,570)
+        self.backb.resize(150,60)
+        self.backb.setFixedHeight(60)
+        self.backb.setStyleSheet("""QPushButton{
+            background-color: darkBlue;
+            border-style: outset;
+            border-width: 1px;
+            border-radius: 10px;
+            border-color: beige;
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            color: white
+            }""")
+        self.backb.clicked.connect(self.make_handleButton("back"))
+        
+
+        self.th = Thread(self)
+        self.th.changePixmap.connect(self.setImage)
+    def startth(self):
+        self.th.start()
         #self.show()
+    def killth(self):
+        #print('inkill')
+        self.th.quit()
+    def make_handleButton(self, button):
+        def handleButton():
+            if button == "back":
+                self.reset()
+                #print(globals.pushupsCount)
+                globals.recording=False
+                if(globals.inpushup):
+                    globals.inpushup=False
+                elif(globals.insquats):
+                    globals.insquats=False
+
+                
+                self.goto("main")
+        return handleButton
 
 class Window(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -226,6 +273,7 @@ class Window(QtWidgets.QMainWindow):
         self.height = 150
         globals.init()
         self.initUI()
+        self.updatesignal1=QtCore.pyqtSignal(str)
 
         self.stacked_widget = QtWidgets.QStackedWidget()
         self.setCentralWidget(self.stacked_widget)
@@ -250,7 +298,8 @@ class Window(QtWidgets.QMainWindow):
         self.m_pages[name] = widget
         self.stacked_widget.addWidget(widget)
         if isinstance(widget, PageWindow):
-            widget.gotoSignal.connect(self.goto)
+            widget.gotoSignal.connect(self.goto)  
+
 
     @QtCore.pyqtSlot(str)
     def goto(self, name):
@@ -258,6 +307,13 @@ class Window(QtWidgets.QMainWindow):
             widget = self.m_pages[name]
             self.stacked_widget.setCurrentWidget(widget)
             self.setWindowTitle(widget.windowTitle())
+            if name=="main":
+                widget.updatelabels()
+                w2=self.m_pages["count"]
+                w2.killth()
+            elif name =="count":
+                globals.quitcap=False
+                widget.startth()
 
 if __name__=="__main__":
     App = QApplication(sys.argv)

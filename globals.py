@@ -11,6 +11,7 @@ def init ():
     global testnet
     global t
     global lasttime
+    global quitcap
 
 
 
@@ -32,3 +33,5 @@ def init ():
     insquats=False
     pushupsCount=0
     squatscount=0
+
+    quitcap=False

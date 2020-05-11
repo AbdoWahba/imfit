@@ -16,11 +16,14 @@ class Thread(QThread):
     def run(self):
         cap = cv2.VideoCapture(0)
         fgbg = cv2.createBackgroundSubtractorMOG2()
+        t0 = time.time()
+        font = cv2.FONT_HERSHEY_SIMPLEX
         
-        while True:
-            if(globals.recording):
+        while globals.quitcap==False :
+
+            if(globals.recording ):
                 ret, frame = cap.read()
-                if ret:
+                if ret and time.time()-t0>6:
                     # rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                     # h, w, ch = rgbImage.shape
                     # bytesPerLine = ch * w
@@ -67,7 +70,13 @@ class Thread(QThread):
                         else:
                             globals.testnet.append(0)
                 #---------------------------
-                font = cv2.FONT_HERSHEY_SIMPLEX
+                else :
+                    cv2.putText(frame,str(5-int(time.time()-t0)),(int(frame.shape[0]/2+10),int(frame.shape[1]/2-10)), font, 5, (255, 0, 0), 4, cv2.LINE_AA)
+                    frame= cv2.circle(frame, (int(frame.shape[0]/2+55),int(frame.shape[1]/2-55)), 80, (255, 0, 0), 4)
+                    cv2.putText(frame,"get ready",(int(frame.shape[0]/2-90),int(frame.shape[1]/2+70)), font, 2, (255, 0, 0), 4, cv2.LINE_AA)
+
+                #-----------------------
+                
                 if(globals.inpushup):
                     cv2.putText(frame,str(globals.pushupsCount),(0,130), font, 5, (255, 0, 0), 4, cv2.LINE_AA)
                 if(globals.insquats):
@@ -78,3 +87,8 @@ class Thread(QThread):
                 convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
                 p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
                 self.changePixmap.emit(p)
+
+        cap.release()
+
+    def quit(self):
+        globals.quitcap=True    
