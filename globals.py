@@ -12,11 +12,15 @@ def init ():
     global t
     global lasttime
     global quitcap
+    
 
 
 
     # OpenPose
     global show_msg
+    global quitcapPose
+    global poseState
+    global posecounter
 
 
 
@@ -40,3 +44,6 @@ def init ():
 
     # OpenPose
     show_msg = ''
+    quitcapPose=False
+    poseState=''
+    posecounter=0
