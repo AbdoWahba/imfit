@@ -22,6 +22,9 @@ def init ():
     global poseState
     global posecounter
 
+    #testPose
+    global poseState
+
 
 
 
@@ -50,3 +53,7 @@ def init ():
     "type": "success",
     "content": " "
     }
+
+
+    #testing pose
+    poseState=" "

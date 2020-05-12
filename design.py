@@ -258,6 +258,7 @@ class MainPoseWindow(PageWindow):
             padding: 6px;
             color: white
             }""")
+        self.testb.clicked.connect(self.make_handleButton("testimage"))
 
         self.empty= QtWidgets.QLabel(self)
         self.empty.setText(' ')
@@ -352,6 +353,8 @@ class MainPoseWindow(PageWindow):
                 self.goto("openPosecount")
             if button == "main":
                 self.goto("main")
+            if button == "testimage":
+                self.goto("testimage")
         return handleButton
 
 #------------------recording window for opencv-----------------------
@@ -501,6 +504,107 @@ class countOpenPoseWindow(PageWindow):
         return handleButton
 
 
+#----------------------- upload image page-----------------------------
+class UploadImageWindow(PageWindow):
+    def __init__(self):
+        super().__init__()
+        self.title = "live"
+        self.left = 150
+        self.top = 50
+        self.width = 150
+        self.height = 150
+        self.initUI()
+        
+
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.resize(800, 700)
+        # create a label
+        self.label = QLabel(self)
+        self.label.move(60, 80)
+        self.label.resize(550, 400)
+
+        #self.openFileNameDialog()
+        #self.label.setPixmap(QPixmap.fromImage(image))
+        
+        self.backb= QtWidgets.QPushButton('back',self)
+        self.backb.move(570,570)
+        self.backb.resize(150,60)
+        self.backb.setFixedHeight(60)
+        self.backb.setStyleSheet("""QPushButton{
+            background-color: darkBlue;
+            border-style: outset;
+            border-width: 1px;
+            border-radius: 10px;
+            border-color: beige;
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            color: white
+            }""")
+        self.backb.clicked.connect(self.make_handleButton("back"))
+
+        self.uploadimage=QtWidgets.QPushButton('Upload image',self)
+        self.uploadimage.move(540,240)
+        self.uploadimage.resize(150,60)
+        self.uploadimage.setFixedHeight(60)
+        self.uploadimage.setStyleSheet("""QPushButton{
+            background-color: darkBlue;
+            border-style: outset;
+            border-width: 1px;
+            border-radius: 10px;
+            border-color: beige;
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            color: white
+            }""")
+        self.uploadimage.clicked.connect(self.openFileNameDialog)
+
+
+        self.poseState=QLabel(self)
+        self.poseState.move(80, 500)
+        self.poseState.resize(300, 100)
+        self.poseState.setWordWrap(True)
+        self.poseState.setStyleSheet("""QLabel{
+            font: bold 14px;
+            min-width: 10em;
+            padding: 6px;
+            }""")
+        
+        #self.poseState.resize(550, 400)
+    
+    def openFileNameDialog(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*.jpg)", options=options)
+        if fileName:
+            print(fileName)
+            pixmap= QPixmap(str(fileName))
+            pixmap=pixmap.scaled(450, 450, Qt.KeepAspectRatio, Qt.FastTransformation)
+            # image=cv2.imread(str(fileName))
+            # image=preprocess(image)
+            self.label.setPixmap(pixmap)
+            self.poseState.setText(f"{globals.poseState}")
+
+        
+    def make_handleButton(self, button):
+        def handleButton():
+            if button == "back":
+                self.reset()
+                #print(globals.pushupsCount)
+                globals.recording=False
+                if(globals.inpushup):
+                    globals.inpushup=False
+                elif(globals.insquats):
+                    globals.insquats=False
+
+                
+                self.goto("openPose")
+        return handleButton
+
+
 class Window(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -521,7 +625,7 @@ class Window(QtWidgets.QMainWindow):
         self.register(countWindow(), "count")
         self.register(MainPoseWindow(), "openPose")
         self.register(countOpenPoseWindow(), "openPosecount")
-        #self.register(countWindow(), "testimage")
+        self.register(UploadImageWindow(), "testimage")
 
         self.goto("main")
 

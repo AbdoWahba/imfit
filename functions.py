@@ -2,6 +2,7 @@ import numpy as np
 import time
 from matplotlib import pyplot as plt 
 import math
+#from PIL import Image
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import  QWidget, QLabel, QApplication
@@ -87,4 +88,19 @@ class Thread(QThread):
         cap.release()
 
     def quit(self):
-        globals.quitcap=True    
+        globals.quitcap=True  
+
+
+# def preprocess(image):
+#   #print(type(image))
+#   img = np.array(image)
+#   mean = 0
+#   gauss = np.random.normal(mean, 1, img.shape)
+
+#   noisy = img + gauss
+#   minv = np.amin(noisy)
+#   maxv = np.amax(noisy)
+#   noisy = (255 * (noisy - minv) / (maxv - minv)).astype(np.uint8)
+
+#   im = Image.fromarray(noisy)
+#   return(im)
