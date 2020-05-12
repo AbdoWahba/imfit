@@ -6,6 +6,7 @@ import sys
 
 from functions import *
 from posethread import *
+from run_image import *
 import globals
 
 class PageWindow(QtWidgets.QMainWindow):
@@ -524,9 +525,6 @@ class UploadImageWindow(PageWindow):
         self.label = QLabel(self)
         self.label.move(60, 80)
         self.label.resize(550, 400)
-
-        #self.openFileNameDialog()
-        #self.label.setPixmap(QPixmap.fromImage(image))
         
         self.backb= QtWidgets.QPushButton('back',self)
         self.backb.move(570,570)
@@ -567,26 +565,44 @@ class UploadImageWindow(PageWindow):
         self.poseState.move(80, 500)
         self.poseState.resize(300, 100)
         self.poseState.setWordWrap(True)
-        self.poseState.setStyleSheet("""QLabel{
-            font: bold 14px;
-            min-width: 10em;
-            padding: 6px;
-            }""")
         
         #self.poseState.resize(550, 400)
     
     def openFileNameDialog(self):
+        self.poseState.setText(f"please wait ... processing your image")
+        self.poseState.setStyleSheet("""QLabel{
+                font: bold 14px;
+                min-width: 10em;
+                padding: 6px;
+                }""")
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*.jpg)", options=options)
         if fileName:
-            print(fileName)
+            #print(fileName)
             pixmap= QPixmap(str(fileName))
             pixmap=pixmap.scaled(450, 450, Qt.KeepAspectRatio, Qt.FastTransformation)
-            # image=cv2.imread(str(fileName))
-            # image=preprocess(image)
             self.label.setPixmap(pixmap)
-            self.poseState.setText(f"{globals.poseState}")
+            value=runimage(str(fileName))
+            print(value)
+            globals.poseState=value['type']
+            if value['type'] == 'success':
+                self.poseState.setStyleSheet("""QLabel{
+                font: bold 14px;
+                color:green;
+                min-width: 10em;
+                padding: 6px;
+                }""")
+                self.poseState.setText(f"{value['msg']}")
+            elif value['type'] == 'error':
+                self.poseState.setStyleSheet("""QLabel{
+                font: bold 14px;
+                color:red;
+                min-width: 10em;
+                padding: 6px;
+                }""")
+                self.poseState.setText(f"{value['msg']}")
+            
 
         
     def make_handleButton(self, button):

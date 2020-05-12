@@ -75,7 +75,9 @@ def have_strait_back(Knee_Hip_Shoulder,Ankle_Knee_Hip):
         "type":"error"}
 
 
-def run(file_path):
+def runimage(file_path):
+    w, h = model_wh('432x368')
+    e = TfPoseEstimator(get_graph_path("cmu"), target_size=(w, h), trt_bool=False)
     global RIGHT_INDX
     global LEFT_INDX
     global ANGLES
@@ -121,13 +123,13 @@ def run(file_path):
     return msg
         
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    w, h = model_wh('432x368')
-    e = TfPoseEstimator(get_graph_path("cmu"), target_size=(w, h), trt_bool=False)
-    print("______________________________________________")
-    out = run(FILE_PATH)
-    print(out)
+#     w, h = model_wh('432x368')
+#     e = TfPoseEstimator(get_graph_path("cmu"), target_size=(w, h), trt_bool=False)
+#     #print("______________________________________________")
+#     out = run(FILE_PATH)
+#     #print(out)
     
 
 
