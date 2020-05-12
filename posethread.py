@@ -17,7 +17,7 @@ import globals
 class poseThread(QThread):
     changePixmap = pyqtSignal(QImage)
     
-    def run(cam):
+    def run(self):
         CAMERA = 0
         MODEL = "cmu"
         RESIZE = "160x112"
@@ -27,7 +27,8 @@ class poseThread(QThread):
         cam = cv2.VideoCapture(CAMERA)
         fps_time = 0
         frame_count = 0;
-        while globals.quitcapPose==False:
+        print(globals.quitcapPose)
+        while True:
             ret_val, image = cam.read()
 
             if not ret_val:
@@ -55,10 +56,10 @@ class poseThread(QThread):
                         (0, 255, 0), 2)
             cv2.imshow('tf-pose-estimation result', image)
             fps_time = time.time()
-            if cv2.waitKey(1) == 27:
-                break
-        cap.release()
-        cv2.destroyAllWindows()
+            # if cv2.waitKey(1) == 27:
+            #     break
+        cam.release()
+        #cv2.destroyAllWindows()
     
     def quit(self):
         globals.quitcapPose=True 

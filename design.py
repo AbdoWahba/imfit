@@ -241,7 +241,7 @@ class MainPoseWindow(PageWindow):
             padding: 6px;
             color: white
             }""")
-        self.pushupcountb.clicked.connect(self.make_handleButton("pushupCount"))
+        self.pushupcountb.clicked.connect(self.make_handleButton("openPosecount"))
       
         self.testb = QtWidgets.QPushButton('test Pose',self)
         self.testb.move(550,310)
@@ -348,13 +348,8 @@ class MainPoseWindow(PageWindow):
 
     def make_handleButton(self, button):
         def handleButton():
-            if button == "pushupCount":
-                self.reset()
-                globals.pushupsCount=0
-                globals.recording=True
-                globals.inpushup=True
-                
-                self.goto("count")
+            if button == "openPosecount":
+                self.goto("openPosecount")
             if button == "main":
                 self.goto("main")
         return handleButton
@@ -425,7 +420,7 @@ class countWindow(PageWindow):
         return handleButton
 
 #-------------------recording openPose---------------------------------
-class countWindow(PageWindow):
+class countOpenPoseWindow(PageWindow):
     def __init__(self):
         super().__init__()
         self.title = "live"
@@ -438,6 +433,24 @@ class countWindow(PageWindow):
     @pyqtSlot(QImage)
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImage(image))
+        if globals.show_msg['type'] == 'success':
+            self.msg.setStyleSheet("""QLabel{
+            font: bold 14px;
+            color:green;
+            min-width: 10em;
+            padding: 6px;
+            }""")
+            self.msg.setText(f"{globals.show_msg['content']}")
+        elif globals.show_msg['type'] == 'error':
+            self.msg.setStyleSheet("""QLabel{
+            font: bold 14px;
+            color:red;
+            min-width: 10em;
+            padding: 6px;
+            }""")
+            self.msg.setText(f"{globals.show_msg['content']}")
+
+        
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -447,7 +460,11 @@ class countWindow(PageWindow):
         self.label = QLabel(self)
         self.label.move(80, 80)
         self.label.resize(640, 480)
-        
+
+        self.msg= QtWidgets.QLabel(self)
+        self.msg.setText(f"{globals.show_msg['content']}")
+        self.label.move(100, 570)
+
         self.backb= QtWidgets.QPushButton('back',self)
         self.backb.move(570,570)
         self.backb.resize(150,60)
@@ -501,7 +518,7 @@ class Window(QtWidgets.QMainWindow):
         self.register(MainWindow(), "main")
         self.register(countWindow(), "count")
         self.register(MainPoseWindow(), "openPose")
-        self.register(countWindow(), "openPosecount")
+        self.register(countOpenPoseWindow(), "openPosecount")
         #self.register(countWindow(), "testimage")
 
         self.goto("main")
@@ -537,10 +554,10 @@ class Window(QtWidgets.QMainWindow):
                 widget.startth()
             elif name=="openPose":
                 widget.updatelabels()
-                #w2=self.m_pages["openPosecount"]
-                #w2.killth()
+                w2=self.m_pages["openPosecount"]
+                w2.killth()
             elif name =="openPosecount":
-                globals.quitcap=False
+                globals.quitcapPose=False
                 widget.startth()
 
 if __name__=="__main__":

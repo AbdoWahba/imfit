@@ -47,6 +47,6 @@ def init ():
     poseState=''
     posecounter=0
     show_msg = {
-    "type": "",
-    "content": ""
-}
+    "type": "success",
+    "content": " "
+    }
