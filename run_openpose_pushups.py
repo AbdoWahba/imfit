@@ -13,7 +13,7 @@ from imfit import process_frame
 
 CAMERA = 0
 MODEL = "cmu"
-RESIZE = "128x80"
+RESIZE = "160x112"
 RESIZE_OUT_RATIO = 4.0
 
 def run(cam):

@@ -75,11 +75,11 @@ def have_strait_back(angles):
     else: Ankle_Knee_Hip = None
 
     if (Knee_Hip_Shoulder and Ankle_Knee_Hip):
-        return is_angle_in_range(Knee_Hip_Shoulder, 160, 180) and is_angle_in_range(Ankle_Knee_Hip, 160, 180)
+        return is_angle_in_range(Knee_Hip_Shoulder, 140, 180) and is_angle_in_range(Ankle_Knee_Hip, 140, 180)
     elif (Knee_Hip_Shoulder ):
-        return is_angle_in_range(Knee_Hip_Shoulder, 160, 180)
+        return is_angle_in_range(Knee_Hip_Shoulder, 140, 180)
     elif (Ankle_Knee_Hip ):
-        return is_angle_in_range(Ankle_Knee_Hip, 160, 180)
+        return is_angle_in_range(Ankle_Knee_Hip, 140, 180)
     else: 
         return True
 
@@ -114,11 +114,11 @@ def starting_pose_correct(angles):
         Knee_Hip_Shoulder = angles['Knee,Hip,Shoulder']
     if 'Ankle,Knee,Hip' in keys: 
         Ankle_Knee_Hip = angles['Ankle,Knee,Hip']
-
+    
     if not Shoulder_Elbow_Wrist and Hip_Shoulder_Elbow and Knee_Hip_Shoulder and Ankle_Knee_Hip:
         return False
 
-    return (is_angle_in_range(Shoulder_Elbow_Wrist, 160, 180) and is_angle_in_range(Hip_Shoulder_Elbow, 50, 90) and is_angle_in_range(Knee_Hip_Shoulder, 160, 180) and is_angle_in_range(Ankle_Knee_Hip, 160, 180))
+    return (is_angle_in_range(Shoulder_Elbow_Wrist, 140, 180) and is_angle_in_range(Hip_Shoulder_Elbow, 45, 90) and is_angle_in_range(Knee_Hip_Shoulder, 140, 180) and is_angle_in_range(Ankle_Knee_Hip, 140, 180))
 
 
 def check_angles(angles):
@@ -145,13 +145,13 @@ def check_angles(angles):
 def is_up(Shoulder_Elbow_Wrist, Hip_Shoulder_Elbow):
 
     if (Shoulder_Elbow_Wrist and Hip_Shoulder_Elbow):
-        return is_angle_in_range(Shoulder_Elbow_Wrist, 160, 180) and is_angle_in_range(Hip_Shoulder_Elbow, 50, 90)
+        return is_angle_in_range(Shoulder_Elbow_Wrist, 140, 180) and is_angle_in_range(Hip_Shoulder_Elbow, 45, 90)
 
     if Shoulder_Elbow_Wrist:
-        return is_angle_in_range(Shoulder_Elbow_Wrist, 160, 180)
+        return is_angle_in_range(Shoulder_Elbow_Wrist, 140, 180)
 
     if Hip_Shoulder_Elbow:
-        return is_angle_in_range(Hip_Shoulder_Elbow, 50, 90)
+        return is_angle_in_range(Hip_Shoulder_Elbow, 45, 90)
     
     return False
 
@@ -159,13 +159,13 @@ def is_up(Shoulder_Elbow_Wrist, Hip_Shoulder_Elbow):
 
 def is_down(Shoulder_Elbow_Wrist, Hip_Shoulder_Elbow):
     if (Shoulder_Elbow_Wrist and Hip_Shoulder_Elbow):
-        return is_angle_in_range(Shoulder_Elbow_Wrist, 0, 140) and is_angle_in_range(Hip_Shoulder_Elbow, 0, 40)
+        return is_angle_in_range(Shoulder_Elbow_Wrist, 0, 140) and is_angle_in_range(Hip_Shoulder_Elbow, 0, 45)
 
     if Shoulder_Elbow_Wrist:
         return is_angle_in_range(Shoulder_Elbow_Wrist, 0, 140)
 
     if Hip_Shoulder_Elbow:
-        return is_angle_in_range(Hip_Shoulder_Elbow, 0, 40)
+        return is_angle_in_range(Hip_Shoulder_Elbow, 0, 45)
     
     return False
 
@@ -221,6 +221,9 @@ def process_frame(frame):
 
         angles[key] = getAngle(pose[f'{angle[0]}']['point'], pose[f'{angle[1]}']['point'], pose[f'{angle[2]}']['point'])
 
+    print(angles)
+    print(MSG)
+
     if not check_angles(angles):
         print('Not Angles')
         return COUNTER
@@ -228,7 +231,6 @@ def process_frame(frame):
     # If no CURRENT_STATE do not start
     if not CURRENT_STATE: 
         if (starting_pose_correct(angles)):
-            print('starting done')
             CURRENT_STATE = STATES['UP']
             MSG['type'] = "success"
             MSG['content'] = "keep going, Everything is okay"
