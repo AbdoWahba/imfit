@@ -9,7 +9,8 @@ import math
 
 #cap=cv2.VideoCapture('https://www.videvo.net/videvo_files/converted/2018_05/preview/180419_Boxing_15_06.mp466556.webm')
 #cap = cv2.VideoCapture('/home/asmaa/Downloads/20200501_194209.mp4')
-cap=cv2.VideoCapture(0)# live camera
+cap = cv2.VideoCapture('/home/asmaa/Downloads/20200501_194155.mp4')
+#cap=cv2.VideoCapture(0)# live camera
 
 fgbg = cv2.createBackgroundSubtractorMOG2()
 x=[]
@@ -39,17 +40,18 @@ while(1):
 
     #------------test------------------
     if(not np.isnan(point[0])):
-        meanx= 0 if (len(xall)<=0)  else np.nanmean(xall)
-        meany= 0 if (len(yall)<=0) else np.nanmean(yall)
+        meanx= np.nanmean(xall)
+        meany=  np.nanmean(yall)
         xall2=xall.copy()+meany-meanx 
         #print(min(yall))
         net=xall2+yall
-        mean= 0 if (len(yall)<=1) else np.nanmean(net)
+        if(t<20 or t%20==0 ):
+            mean= np.nanmean(net)
         if(point[0]+meany-meanx+point[1] >= mean):
             if(len(testnet)>0 and testnet[-1]==0):
                 print (x[-1]-lasttime)
                 if(lasttime==0):
-                    #counter=counter+1
+                    counter=counter+1
                     lasttime=x[-1]
                 elif(x[-1]-lasttime >= 20):# 20/30 if in live mode 100 if video
                     counter=counter+1
@@ -64,10 +66,13 @@ while(1):
         break
     #-------------------
 
+    if(counter > 3 and net[-1]>=max(net)+100):
+        print('out')
+
 
 cap.release()
 print(counter)
-print(mean)
+# print(mean)
 #print(xall)
 #------------------------------------------------------------
 # meanx=np.nanmean(xall)
