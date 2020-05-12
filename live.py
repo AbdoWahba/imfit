@@ -67,7 +67,7 @@ while(1):
 
 cap.release()
 print(counter)
-print(mean)
+# print(mean)
 #print(xall)
 #------------------------------------------------------------
 # meanx=np.nanmean(xall)
