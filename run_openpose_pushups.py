@@ -13,7 +13,7 @@ from imfit import process_frame
 
 CAMERA = 0
 MODEL = "cmu"
-RESIZE = "160x112"
+RESIZE = "128x80"
 RESIZE_OUT_RATIO = 4.0
 
 def run(cam):
@@ -21,6 +21,10 @@ def run(cam):
     frame_count = 0;
     while True:
         ret_val, image = cam.read()
+
+        if not ret_val:
+            continue
+        
         humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=RESIZE_OUT_RATIO)
         frame_count += 1
         ll = {}

@@ -191,15 +191,18 @@ def process_frame(frame):
         angles[key] = getAngle(pose[f'{angle[0]}']['point'], pose[f'{angle[1]}']['point'], pose[f'{angle[2]}']['point'])
 
     if not check_angles(angles):
+        print('Not Angles')
         return COUNTER
 
     # If no CURRENT_STATE do not start
     if not CURRENT_STATE: 
         if (starting_pose_correct(angles)):
+            print('starting done')
             CURRENT_STATE = STATES['UP']
         else:
             # Waiting user to be in frame with correct starting pose
             # show msg
+            print('Not correct pose')
             return COUNTER
 
 
@@ -219,7 +222,7 @@ def process_frame(frame):
 
 if __name__ == "__main__":
     
-    with open('./bla.json', 'r') as f:
+    with open('./test/framesposfortestvid.json', 'r') as f:
         data = json.load(f)
 
     for frame in data:

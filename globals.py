@@ -15,6 +15,8 @@ def init ():
 
 
 
+    # OpenPose
+    global show_msg
 
 
 
@@ -35,3 +37,6 @@ def init ():
     squatscount=0
 
     quitcap=False
+
+    # OpenPose
+    show_msg = ''

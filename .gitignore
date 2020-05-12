@@ -6,122 +6,122 @@ __pycache__
 **.pyc
 
 # Byte-compiled / optimized / DLL files
-tf-openpose/__pycache__/
-tf-openpose/*.py[cod]
-tf-openpose/*$py.class
+__pycache__/
+*.py[cod]
+*$py.class
 
 # C extensions
 *.so
 
 # Distribution / packaging
-tf-openpose/.Python
-tf-openpose/env/
-tf-openpose/build/
-tf-openpose/develop-eggs/
-tf-openpose/dist/
-tf-openpose/downloads/
-tf-openpose/eggs/
-tf-openpose/.eggs/
-tf-openpose/lib/
-tf-openpose/lib64/
-tf-openpose/parts/
-tf-openpose/sdist/
-tf-openpose/var/
-tf-openpose/wheels/
-tf-openpose/*.egg-info/
-tf-openpose/.installed.cfg
-tf-openpose/*.egg
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
-tf-openpose/*.manifest
-tf-openpose/*.spec
+*.manifest
+*.spec
 
 # Installer logs
-tf-openpose/pip-log.txt
-tf-openpose/pip-delete-this-directory.txt
+pip-log.txt
+pip-delete-this-directory.txt
 
 # Unit test / coverage reports
-tf-openpose/htmlcov/
-tf-openpose/.tox/
-tf-openpose/.coverage
-tf-openpose/.coverage.*
-tf-openpose/.cache
-tf-openpose/nosetests.xml
-tf-openpose/coverage.xml
-tf-openpose/*.cover
-tf-openpose/.hypothesis/
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
 
 # Translations
-tf-openpose/*.mo
-tf-openpose/*.pot
+*.mo
+*.pot
 
 # Django stuff:
-tf-openpose/*.log
-tf-openpose/local_settings.py
+*.log
+local_settings.py
 
 # Flask stuff:
-tf-openpose/instance/
-tf-openpose/.webassets-cache
+instance/
+.webassets-cache
 
 # Scrapy stuff:
-tf-openpose/.scrapy
+.scrapy
 
 # Sphinx documentation
-tf-openpose/docs/_build/
+docs/_build/
 
 # PyBuilder
-tf-openpose/target/
+target/
 
 # Jupyter Notebook
-tf-openpose/.ipynb_checkpoints
+.ipynb_checkpoints
 
 # pyenv
-tf-openpose/.python-version
+.python-version
 
 # celery beat schedule file
-tf-openpose/celerybeat-schedule
+celerybeat-schedule
 
 # SageMath parsed files
-tf-openpose/*.sage.py
+*.sage.py
 
 # dotenv
-tf-openpose/.env
+.env
 
 # virtualenv
-tf-openpose/.venv
-tf-openpose/venv/
-tf-openpose/ENV/
+.venv
+venv/
+ENV/
 
 # Spyder project settings
-tf-openpose/.spyderproject
-tf-openpose/.spyproject
+.spyderproject
+.spyproject
 
 # Rope project settings
-tf-openpose/.ropeproject
+.ropeproject
 
 # mkdocs documentation
-tf-openpose/site
+site
 
 # mypy
-tf-openpose/.mypy_cache/
+.mypy_cache/
 
 # models
-tf-openpose/*ckpt*
-tf-openpose/*.npy
-tf-openpose/timeline*.json
+*ckpt*
+*.npy
+timeline*.json
 
 # project customs 
-tf-openpose/tmp
-tf-openpose/models/graph/cmu*/*.pb
-tf-openpose/models/trained/*/checkpoint
-tf-openpose/models/trained/*/*.pb
-tf-openpose/models/trained/*/model-*.data-*
-tf-openpose/models/trained/*/model-*.index
-tf-openpose/models/trained/*/model-*.meta
-tf-openpose/models/pretrained/resnet_v2_101/eval.graph
-tf-openpose/models/pretrained/resnet_v2_101/train.graph
-tf-openpose/src/pafprocess/pafprocess.py
-tf-openpose/src/pafprocess/pafprocess_wrap.cpp
-tf-openpose/src/pafprocess/pafprocess_wrap.cxx
+tmp
+models/graph/cmu*/*.pb
+models/trained/*/checkpoint
+models/trained/*/*.pb
+models/trained/*/model-*.data-*
+models/trained/*/model-*.index
+models/trained/*/model-*.meta
+models/pretrained/resnet_v2_101/eval.graph
+models/pretrained/resnet_v2_101/train.graph
+src/pafprocess/pafprocess.py
+src/pafprocess/pafprocess_wrap.cpp
+src/pafprocess/pafprocess_wrap.cxx
