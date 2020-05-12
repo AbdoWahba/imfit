@@ -39,4 +39,7 @@ def init ():
     quitcap=False
 
     # OpenPose
-    show_msg = ''
+    show_msg = {
+    "type": "",
+    "content": ""
+}
