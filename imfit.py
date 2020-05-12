@@ -200,7 +200,7 @@ def process_frame(frame):
     global COUNTER
 
     pose = frame['pose']
-    pose = { k:v for k,v in pose.items() if v['score']>=0.5 }
+    pose = { k:v for k,v in pose.items() if v['score']>=0.3 }
     right_pose = { k:v for k,v in pose.items() if v['indx'] in RIGHT_INDX }
     left_pose = {k:v for k,v in pose.items() if v['indx'] in LEFT_INDX}
 
