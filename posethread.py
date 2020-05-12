@@ -26,13 +26,12 @@ class poseThread(QThread):
         e = TfPoseEstimator(get_graph_path(MODEL), target_size=(w, h), trt_bool=False)
         cam = cv2.VideoCapture(CAMERA)
         fps_time = 0
-        frame_count = 0;
-        print(globals.quitcapPose)
-        while True:
+        frame_count = 0
+        while globals.quitcapPose==False:
             ret_val, image = cam.read()
 
             if not ret_val:
-                continue
+                break
             
             humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=RESIZE_OUT_RATIO)
             frame_count += 1
@@ -54,8 +53,14 @@ class poseThread(QThread):
                         f"FPS: {(1.0 / (time.time() - fps_time))} | counter {globals.posecounter}",
                         (10, 10),  cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                         (0, 255, 0), 2)
-            cv2.imshow('tf-pose-estimation result', image)
+            #cv2.imshow('tf-pose-estimation result', image)
             fps_time = time.time()
+            rgbImage = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            h, w, ch = rgbImage.shape
+            bytesPerLine = ch * w
+            convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+            p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+            self.changePixmap.emit(p)
             # if cv2.waitKey(1) == 27:
             #     break
         cam.release()
