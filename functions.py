@@ -26,9 +26,9 @@ class Thread(QThread):
                 ret, frame = cap.read()
                 if ret and time.time()-t0>6:
                     fgmask = fgbg.apply(frame)
-                    t= globals.t
-                    globals.x.append(t)
-                    t=t+1
+                    #t= globals.t
+                    globals.x.append(globals.t)
+                    globals.t=globals.t+1
                     point=np.average(np.where(fgmask==255), axis=1)
                     globals.y.append(point)
                     globals.xall.append(point[0])
@@ -39,7 +39,7 @@ class Thread(QThread):
                         globals.xall2=globals.xall.copy()+meany-meanx 
                         #print(min(yall))
                         net=globals.xall2+globals.yall
-                        if(t<20 or t%20==0 ):
+                        if(globals.t<20 or globals.t%20==0 ):
                             mean= np.nanmean(net)
                         if(point[0]+meany-meanx+point[1] >= mean):
                             if(len(globals.testnet)>0 and globals.testnet[-1]==0):
