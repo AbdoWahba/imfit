@@ -212,7 +212,7 @@ class MainPoseWindow(PageWindow):
     
 
     def updatelabels(self):
-        self.pu_label.setText(f"{globals.pushupsCount}")
+        self.pu_label.setText(f"{globals.posecounter}")
         self.posetest_answer.setText(f"{globals.poseState}")
 
 
@@ -463,7 +463,9 @@ class countOpenPoseWindow(PageWindow):
 
         self.msg= QtWidgets.QLabel(self)
         self.msg.setText(f"{globals.show_msg['content']}")
-        self.label.move(100, 570)
+        self.msg.resize(300, 100)
+        self.msg.setWordWrap(True)
+        self.msg.move(100, 560)
 
         self.backb= QtWidgets.QPushButton('back',self)
         self.backb.move(570,570)

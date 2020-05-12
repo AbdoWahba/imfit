@@ -38,7 +38,8 @@ class Thread(QThread):
                         globals.xall2=globals.xall.copy()+meany-meanx 
                         #print(min(yall))
                         net=globals.xall2+globals.yall
-                        mean=np.nanmean(net)
+                        if(t<20 or t%20==0 ):
+                            mean= np.nanmean(net)
                         if(point[0]+meany-meanx+point[1] >= mean):
                             if(len(globals.testnet)>0 and globals.testnet[-1]==0):
                                 #print (x[-1]-lasttime)
@@ -62,8 +63,8 @@ class Thread(QThread):
                         else:
                             globals.testnet.append(0)
 
-                    if(globals.pushupsCount > 3 and net[-1]>=max(net)+50):
-                        print('out?')
+                    # if(globals.pushupsCount > 3 and net[-1]>=max(net)+50):
+                    #     print('out?')
                 #---------------------------
                 else :
                     cv2.putText(frame,str(5-int(time.time()-t0)),(int(frame.shape[0]/2+10),int(frame.shape[1]/2-10)), font, 5, (255, 0, 0), 4, cv2.LINE_AA)
