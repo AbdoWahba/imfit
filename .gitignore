@@ -127,3 +127,4 @@ src/pafprocess/pafprocess_wrap.cpp
 src/pafprocess/pafprocess_wrap.cxx
 tf_pose/pafprocess/pafprocess_wrap.cpp
 tf_pose/pafprocess/pafprocess_wrap.cxx
+tf-openpose/
