@@ -9,7 +9,8 @@ import math
 
 #cap=cv2.VideoCapture('https://www.videvo.net/videvo_files/converted/2018_05/preview/180419_Boxing_15_06.mp466556.webm')
 #cap = cv2.VideoCapture('/home/asmaa/Downloads/20200501_194209.mp4')
-cap=cv2.VideoCapture(0)# live camera
+cap = cv2.VideoCapture('/home/asmaa/Downloads/20200501_194155.mp4')
+#cap=cv2.VideoCapture(0)# live camera
 
 fgbg = cv2.createBackgroundSubtractorMOG2()
 x=[]
@@ -44,7 +45,8 @@ while(1):
         xall2=xall.copy()+meany-meanx 
         #print(min(yall))
         net=xall2+yall
-        mean=  np.nanmean(net)
+        if(t<20 or t%20==0 ):
+            mean= np.nanmean(net)
         if(point[0]+meany-meanx+point[1] >= mean):
             if(len(testnet)>0 and testnet[-1]==0):
                 print (x[-1]-lasttime)
@@ -91,7 +93,7 @@ print(mean)
 # plt.plot(x,yall)
 #.plot(x,y)
 plt.subplot(3, 1, 1)
-#plt.plot(x,yall)
+plt.plot(x,yall)
 plt.plot(x,xall)
 plt.subplot(3, 1, 2)
 plt.plot(x,testnet)
