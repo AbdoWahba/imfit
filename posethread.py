@@ -12,14 +12,16 @@ import math
 from imfit import process_frame
 
 from design import *
+import globals
 
 class poseThread(QThread):
     changePixmap = pyqtSignal(QImage)
-    CAMERA = 0
-    MODEL = "cmu"
-    RESIZE = "160x112"
-    RESIZE_OUT_RATIO = 4.0
+    
     def run(cam):
+        CAMERA = 0
+        MODEL = "cmu"
+        RESIZE = "160x112"
+        RESIZE_OUT_RATIO = 4.0
         w, h = model_wh(RESIZE)
         e = TfPoseEstimator(get_graph_path(MODEL), target_size=(w, h), trt_bool=False)
         cam = cv2.VideoCapture(CAMERA)

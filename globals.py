@@ -43,7 +43,10 @@ def init ():
     quitcap=False
 
     # OpenPose
-    show_msg = ''
     quitcapPose=False
     poseState=''
     posecounter=0
+    show_msg = {
+    "type": "",
+    "content": ""
+}
