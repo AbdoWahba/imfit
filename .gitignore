@@ -1,3 +1,10 @@
+
+venv
+.vscode
+__pycache__
+*.pyc
+**.pyc
+
 # Byte-compiled / optimized / DLL files
 tf-openpose/__pycache__/
 tf-openpose/*.py[cod]
