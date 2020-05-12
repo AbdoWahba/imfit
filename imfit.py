@@ -71,11 +71,11 @@ def have_strait_back(angles):
     else: Ankle_Knee_Hip = None
 
     if (Knee_Hip_Shoulder and Ankle_Knee_Hip):
-        return is_angle_in_range(Knee_Hip_Shoulder, 120, 180) and is_angle_in_range(Ankle_Knee_Hip, 140, 180)
+        return is_angle_in_range(Knee_Hip_Shoulder, 120, 180) and is_angle_in_range(Ankle_Knee_Hip, 130, 180)
     elif (Knee_Hip_Shoulder ):
         return is_angle_in_range(Knee_Hip_Shoulder, 120, 180)
     elif (Ankle_Knee_Hip ):
-        return is_angle_in_range(Ankle_Knee_Hip, 140, 180)
+        return is_angle_in_range(Ankle_Knee_Hip, 130, 180)
     else: 
         return True
 
@@ -200,7 +200,7 @@ def process_frame(frame):
     global COUNTER
 
     pose = frame['pose']
-    pose = { k:v for k,v in pose.items() if v['score']>=0.5 }
+    pose = { k:v for k,v in pose.items() if v['score']>=0.2 }
     right_pose = { k:v for k,v in pose.items() if v['indx'] in RIGHT_INDX }
     left_pose = {k:v for k,v in pose.items() if v['indx'] in LEFT_INDX}
 
